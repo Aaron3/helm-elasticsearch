@@ -27,11 +27,11 @@ common:
   # If enabled, then the data and master nodes will be StatefulSets with
   # associated persistent volume claims.
   stateful:
-    enabled: false
+    enabled: true
 
     # The PVC storage class that backs the persistent volume claims. On AWS
     # "gp2" would be appropriate.
-    class: "standard"
+    class: "digitalocean"
 
 # Client/ingest nodes can execute pre-processing pipelines, composed of
 # one or more ingest processors. Depending on the type of operations performed
@@ -40,16 +40,16 @@ common:
 client:
   # It isn't common to need more than 2 client nodes.
   replicas: 2
-  antiAffinity: "soft"
+  antiAffinity: "hard"
 
   # The amount of RAM allocated to the JVM heap. This should be set to the
   # same value as client.resources.requests.memory, or you may see
   # OutOfMemoryErrors on startup.
-  heapMemory: 256m
+  heapMemory: 6g
 
   resources:
     requests:
-      memory: 256Mi
+      memory: 6Gi
 
   env:
     NODE_DATA: "false"
@@ -67,16 +67,16 @@ client:
 data:
   # This count will depend on your data and computation needs.
   replicas: 2
-  antiAffinity: "soft"
+  antiAffinity: "hard"
 
   # The amount of RAM allocated to the JVM heap. This should be set to the
   # same value as data.esources.requests.memory, or you may see
   # OutOfMemoryErrors on startup.
-  heapMemory: 256m
+  heapMemory: 6g
 
   resources:
     requests:
-      memory: 256Mi
+      memory: 6Gi
 
   env:
     NODE_DATA: "true"
@@ -90,7 +90,7 @@ data:
   stateful:
     # This is a default value, and will not be sufficient in a production
     # system. You'll probably want to increase it.
-    size: 12Gi
+    size: 500Gi
 
 # The master node is responsible for lightweight cluster-wide actions such as
 # creating or deleting an index, tracking which nodes are part of the 
@@ -104,11 +104,11 @@ master:
   # The amount of RAM allocated to the JVM heap. This should be set to the
   # same value as master.resources.requests.memory, or you may see
   # OutOfMemoryErrors on startup.
-  heapMemory: 256m
+  heapMemory: 2g
 
   resources:
     requests:
-      memory: 256Mi
+      memory: 2Mi
 
   env:
     NODE_DATA: "false"
@@ -127,7 +127,7 @@ master:
   stateful:
     # This is a default value, and will not be sufficient in a production
     # system. You'll probably want to increase it.
-    size: 2Gi  
+    size: 20Gi  
 
 curator:
   enabled: true
